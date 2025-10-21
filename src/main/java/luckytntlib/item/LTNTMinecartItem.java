@@ -26,56 +26,65 @@ import net.minecraft.world.event.GameEvent;
 /**
  * The LTNTMinecartItem is an important step in making a custom TNT minecart.
  * It can be used to spawn a {@link LTNTMinecart} onto rails.
- * If a {@link DispenserBehavior} has been registered dispensers can also spawn the minecart.
+ * If a {@link DispenserBehavior} has been registered dispensers can also spawn
+ * the minecart.
  */
-public class LTNTMinecartItem extends MinecartItem{
+public class LTNTMinecartItem extends MinecartItem {
 
-	@Nullable Supplier<Supplier<EntityType<LTNTMinecart>>> minecart;
-	
+	@Nullable
+	Supplier<Supplier<EntityType<LTNTMinecart>>> minecart;
+
 	public LTNTMinecartItem(Item.Settings properties, @Nullable Supplier<Supplier<EntityType<LTNTMinecart>>> minecart) {
-		super(null, properties);  // TODO: Verify minecart type parameter in 1.21.10
+		super(minecart != null ? minecart.get().get() : EntityType.TNT_MINECART, properties);
 		this.minecart = minecart;
 	}
-	
+
 	@Override
 	public ActionResult useOnBlock(ItemUsageContext context) {
 		World level = context.getWorld();
 		BlockPos pos = context.getBlockPos();
 		BlockState state = level.getBlockState(pos);
-		if(!state.isIn(BlockTags.RAILS)) {
+		if (!state.isIn(BlockTags.RAILS)) {
 			return ActionResult.FAIL;
 		}
 		ItemStack stack = context.getStack();
 		double railHeight = 0;
-		if(!level.isClient()) {
-            RailShape rail = state.getBlock() instanceof AbstractRailBlock ? state.get(((AbstractRailBlock)state.getBlock()).getShapeProperty()) : RailShape.NORTH_SOUTH;
-            if (rail.isAscending()) {
-               railHeight = 0.5D;
-            }
+		if (!level.isClient()) {
+			RailShape rail = state.getBlock() instanceof AbstractRailBlock
+					? state.get(((AbstractRailBlock) state.getBlock()).getShapeProperty())
+					: RailShape.NORTH_SOUTH;
+			if (rail.isAscending()) {
+				railHeight = 0.5D;
+			}
 		}
-		LTNTMinecart minecart = createMinecart(level, pos.getX() + 0.5f, pos.getY() + 0.0625f + railHeight, pos.getZ() + 0.5f, context.getPlayer());
+		LTNTMinecart minecart = createMinecart(level, pos.getX() + 0.5f, pos.getY() + 0.0625f + railHeight,
+				pos.getZ() + 0.5f, context.getPlayer());
 		minecart.setOwner(context.getPlayer());
-        if (stack.contains(DataComponentTypes.CUSTOM_NAME) && stack.get(DataComponentTypes.CUSTOM_NAME) != null && !stack.get(DataComponentTypes.CUSTOM_NAME).getString().equals("")) {
-            minecart.setCustomName(stack.getName());
-        }
-        level.emitGameEvent(context.getPlayer(), GameEvent.ENTITY_PLACE, pos);
+		if (stack.contains(DataComponentTypes.CUSTOM_NAME) && stack.get(DataComponentTypes.CUSTOM_NAME) != null
+				&& !stack.get(DataComponentTypes.CUSTOM_NAME).getString().equals("")) {
+			minecart.setCustomName(stack.getName());
+		}
+		level.emitGameEvent(context.getPlayer(), GameEvent.ENTITY_PLACE, pos);
 		stack.decrement(1);
 		return ActionResult.SUCCESS;
 	}
-	
+
 	/**
 	 * Spawns a new {@link LTNTMinecart} held by this item at the given position.
+	 * 
 	 * @param level  the current level
-	 * @param x  the x position 
-	 * @param y  the y position
-	 * @param z  the z position
-	 * @param placer  the owner of the spawned minecart (used primarely for the {@link DamageSource})
+	 * @param x      the x position
+	 * @param y      the y position
+	 * @param z      the z position
+	 * @param placer the owner of the spawned minecart (used primarely for the
+	 *               {@link DamageSource})
 	 * @return {@link LTNTMinecart} or null
 	 * @throws NullPointerException
 	 */
 	@Nullable
-	public LTNTMinecart createMinecart(World level, double x, double y, double z, @Nullable LivingEntity placer) throws NullPointerException{
-		if(minecart != null) {
+	public LTNTMinecart createMinecart(World level, double x, double y, double z, @Nullable LivingEntity placer)
+			throws NullPointerException {
+		if (minecart != null) {
 			LTNTMinecart cart = minecart.get().get().create(level, net.minecraft.entity.SpawnReason.TRIGGERED);
 			cart.setPosition(x, y, z);
 			level.spawnEntity(cart);

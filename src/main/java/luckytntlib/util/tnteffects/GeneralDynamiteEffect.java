@@ -52,8 +52,7 @@ public class GeneralDynamiteEffect extends PrimedTNTEffect{
 	
 	@Override
 	public void spawnParticles(IExplosiveEntity entity) {
-		// TODO: Fix particle spawning for 1.21.10 - World.addParticle() method signature changed
-		// entity.getLevel().addParticle(particles, entity.x(), entity.y(), entity.z(), 0, 0, 0);
+		entity.getLevel().addParticleClient(particles, entity.x(), entity.y(), entity.z(), 0, 0, 0);
 	}
 	
 	@Override

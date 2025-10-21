@@ -17,9 +17,6 @@ public class CenteredStringWidget extends TextWidget {
 
 	@Override
 	public void renderWidget(DrawContext graphics, int i1, int i2, float f) {
-		// Note: In 1.21.10, DrawContext.getMatrices() returns Matrix3x2fStack
-		// which doesn't have push/pop methods. We'll render without the offset for now.
-		// TODO: Find the correct way to offset rendering in 1.21.10
 		super.renderWidget(graphics, i1, i2 + 6, f);
 	}
 }
