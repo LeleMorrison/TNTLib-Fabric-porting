@@ -568,7 +568,11 @@ public class ImprovedExplosion {
 	}
 	
 	public static double transformExplosionKnockback(LivingEntity entity, double velocity) {
-		int i = EnchantmentHelper.getEquipmentLevel(entity.getEntityWorld().getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT).getEntry(Enchantments.KNOCKBACK.getValue()).orElseThrow(), entity);
+		// Get knockback resistance enchantment level using modern registry-based approach
+		var enchantmentRegistry = entity.getEntityWorld().getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT);
+		var knockbackEnchantment = enchantmentRegistry.getEntry(Enchantments.KNOCKBACK.getValue()).orElseThrow();
+		int i = EnchantmentHelper.getEquipmentLevel(knockbackEnchantment, entity);
+		
 		if (i > 0) {
 			velocity *= MathHelper.clamp(1.0 - (double) i * 0.15, 0.0, 1.0);
 		}
