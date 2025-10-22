@@ -95,10 +95,10 @@ public class LTNTMinecart extends MinecartEntity implements IExplosiveEntity{
 			if(source.isOf(DamageTypes.LIGHTNING_BOLT) && getTNTFuse() >= 0) {
 				return false;
 			}
-			// TODO: Check if isInvulnerableTo() still exists and has correct signature in 1.21.10
-			// if (isInvulnerableTo(source)) {
-			// 	return false;
-			// }
+			
+			if (isAlwaysInvulnerableTo(source)) {
+				return false;
+			}
 			setDamageWobbleSide(-getDamageWobbleSide());
 			setDamageWobbleTicks(10);
 			scheduleVelocityUpdate();
@@ -206,15 +206,6 @@ public class LTNTMinecart extends MinecartEntity implements IExplosiveEntity{
 		tag.getCompound("PersistentData").ifPresent(data -> setPersistentData(data));
 	}
 	
-	// Note: getMinecartType() method signature may have changed or been removed in Minecraft 1.21.10
-	// TODO: Verify and update this method according to the new Minecraft API
-	/*
-	@Override
-	public AbstractMinecartEntity.Type getMinecartType() {
-		return AbstractMinecartEntity.Type.TNT;
-	}
-	*/
-		
 	public boolean explodesInstantly() {
 		return explodeInstantly;
 	}

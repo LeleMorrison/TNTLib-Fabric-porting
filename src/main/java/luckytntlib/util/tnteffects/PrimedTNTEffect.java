@@ -12,6 +12,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -101,11 +102,10 @@ public abstract class PrimedTNTEffect{
 	 * @param entity  the {@link IExplosiveEntity} this PrimedTNTEffect belongs to.
 	 */
 	public void spawnParticles(IExplosiveEntity entity) {
-		// TODO: Fix particle spawning for 1.21.10 - World.addParticle() method signature changed
-		// World level = entity.getLevel();
-		// if (level.isClient()) {
-		// 	level.addParticle(ParticleTypes.SMOKE, entity.x(), entity.y() + 0.5f, entity.z(), 0.0, 0.0, 0.0);
-		// }
+		World level = entity.getLevel();
+		if (level.isClient()) {
+			level.addParticleClient(ParticleTypes.SMOKE, entity.x(), entity.y() + 0.5f, entity.z(), 0.0, 0.0, 0.0);
+		}
 	}
 	
 	/**
