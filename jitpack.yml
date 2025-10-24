@@ -1,0 +1,12 @@
+# JitPack build configuration for LuckyTNTLib
+# Ensures proper Java version and build settings for Minecraft 1.21.10
+
+jdk:
+  - openjdk21
+
+before_install:
+  - sdk install java 21.0.1-open || true
+  - sdk use java 21.0.1-open
+
+install:
+  - ./gradlew clean build publishToMavenLocal -x test
