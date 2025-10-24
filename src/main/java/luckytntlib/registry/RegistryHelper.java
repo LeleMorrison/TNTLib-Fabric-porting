@@ -186,6 +186,8 @@ public class RegistryHelper {
 	 * @return {@link Supplier} of a {@link LTNTBlock}
 	 */
 	public Supplier<LTNTBlock> registerTNTBlock(String blockRegistry, @Nullable String itemRegistry, Supplier<LTNTBlock> TNTBlock, TNTBlockRegistryData blockData){
+		// FIX for MC 1.21.10: Block ID must be set BEFORE block constructor is called
+		// Registry.register() now handles the supplier invocation at the correct time
 		LTNTBlock rblock = Registry.register(Registries.BLOCK, Identifier.of(blockRegistry, blockData.getRegistryName()), TNTBlock.get());
 		Supplier<LTNTBlock> block = () -> rblock;
 		((FireBlock)Blocks.FIRE).registerFlammableBlock(rblock, 15, 100);
@@ -268,6 +270,8 @@ public class RegistryHelper {
 	 * @return {@link Supplier} of a {@link LTNTBlock}
 	 */
 	public Supplier<LTNTBlock> registerLivingTNTBlock(String blockRegistry, @Nullable String itemRegistry, Supplier<LivingLTNTBlock> TNTBlock, TNTBlockRegistryData blockData){
+		// FIX for MC 1.21.10: Block ID must be set BEFORE block constructor is called
+		// Registry.register() now handles the supplier invocation at the correct time
 		LTNTBlock rblock = Registry.register(Registries.BLOCK, Identifier.of(blockRegistry, blockData.getRegistryName()), (LTNTBlock)TNTBlock.get());
 		Supplier<LTNTBlock> block = () -> rblock;
 		((FireBlock)Blocks.FIRE).registerFlammableBlock(rblock, 15, 100);
